@@ -257,7 +257,7 @@ svn propset svn:ignore "[Rr][Ee][Aa][Dd][Mm][Ee].[Mm][Dd]
 $HISTORY_FILE
 $ASSETS_DIR
 .gitignore
-HOT-TO-RELEASE
+HOW-TO-RELEASE
 tools" "$SVNPATH"
 
 echo "[Info] Changing directory to SVN and committing to trunk"
