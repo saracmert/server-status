@@ -60,7 +60,15 @@ class dashboard_widget {
 ====
 PHP_VERSION: <?php echo PHP_VERSION; ?> 
 WORDPRESS_VERSION: <?php echo get_bloginfo('version'); ?> 
-PLUGIN_VERSION: <?php echo get_plugin_data(__FILE__)['Version']; ?> 
+PLUGIN_VERSION: <?php
+if(version_compare(PHP_VERSION, '5.4.0dev'))
+	echo get_plugin_data(__FILE__)['Version'];
+else {
+	$plugin_data = get_plugin_data(__FILE__);
+	echo $plugin_data['Version'];
+	unset($plugin_data);
+}
+?> 
 SITE_URL: <?php echo site_url(); ?> 
 HOME_URL: <?php echo home_url(); ?> 
 ADMIN_URL: <?php echo admin_url(); ?> 
