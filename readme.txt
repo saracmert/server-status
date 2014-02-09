@@ -43,10 +43,16 @@ Any `worked` report and bug report is welcome! Please send me detailed informati
 
 == Changelog ==
 
+= 0.1.1 =
+* Bug Fix: Not working before PHP 5.4.0
+
 = 0.1 =
 * Initial Beta Release
 
 == Upgrade Notice ==
+
+= 0.1.1 =
+* None
 
 = 0.1 =
 * None
