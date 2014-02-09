@@ -185,11 +185,23 @@ abstract class widget_data {
 			if(!isset($this->src[$name][$priority]))
 				$this->src[$name][$priority] = array();
 
+		if(version_compare(PHP_VERSION, '5.3.0dev') >= 0) {
 			$this->src[$name][$priority] = array_merge(
 				$this->src[$name][$priority],
 				array(
 					$function_to_add => array(
 							'function' => $function_to_add,
+							'accepted_args' => $accepted_args
+					)
+				)
+			);
+
+		}
+			$this->src[$name][$priority] = array_merge(
+				$this->src[$name][$priority],
+				array(
+					$function_to_add => array(
+							'function' => explode('::', $function_to_add),
 							'accepted_args' => $accepted_args
 					)
 				)
