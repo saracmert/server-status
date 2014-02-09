@@ -30,11 +30,16 @@ class dashboard_widget {
 	function display() {
 		if(false === ($data = get_site_transient('server_status_cache'))) {
 			if(!in_array(PHP_OS, array('Linux', 'Darwin'))) {
-				echo "<p><strong>This widget is not compatible with this OS!!(ID: ". PHP_OS .")</strong></p>";
-				echo "<p>Please send this server info to make this plugin compatible.</p>";
+				?>
+				<p><strong>This widget is not compatible with this OS!!(ID: <?php echo PHP_OS; ?>)</strong></p>
+				<p>To make this plugin compatible, please send me this server info via
+					<a href="http://goo.gl/jb5cqO" onclick="window.open('http://goo.gl/bqItKA', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;" title="Reveal this e-mail address">Email</a>
+					<a href="http://wordpress.org/support/plugin/server-status">Plugin Support</a>.
+				</p>
+				<?php
 				$data['uptime'] = @shell_exec('uptime 2>&1');
 				$data['proc']['uptime'] = @shell_exec('cat /proc/uptime 2>&1');
-				$data['proc']['loadavg'] =@shell_exec('cat /proc/loadavg 2>&1');
+				$data['proc']['loadavg'] = @shell_exec('cat /proc/loadavg 2>&1');
 				$data['w'] = @shell_exec('w 2>&1');
 				$data['w_hs'] = @shell_exec('w -hs 2>&1');
 				$data['who'] = @shell_exec('who 2>&1');
@@ -46,7 +51,23 @@ class dashboard_widget {
 				$data['uname_a'] = @shell_exec('uname -a 2>&1');
 				$data['PHP_OS'] = PHP_OS;
 				$data['PHP_uname'] = php_uname();
-				echo "<textarea>".var_export($data, true)."</textarea>";
+				?>
+				<form><div class="textarea-wrap" id="description-wrap">
+<textarea rows="12">
+
+----If you have any comment, add it above this line----
+<?php var_export($data, true); ?>
+====
+PHP_VERSION: <?php echo PHP_VERSION; ?> 
+WORDPRESS_VERSION: <?php echo get_bloginfo('version'); ?> 
+PLUGIN_VERSION: <?php echo get_plugin_data(__FILE__)['Version']; ?> 
+SITE_URL: <?php echo site_url(); ?> 
+HOME_URL: <?php echo home_url(); ?> 
+ADMIN_URL: <?php echo admin_url(); ?> 
+PLUGINS_URL: <?php echo plugins_url(); ?> 
+SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
+				</div></form>
+				<?php
 				return false;
 			}
 
