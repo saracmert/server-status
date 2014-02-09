@@ -275,7 +275,12 @@ class widget_Linux_data extends widget_data {
 	protected function uptime() {
 		// Uptime Data
 		$this->data['uptime'] = @exec('cat /proc/uptime');
-		$this->data['uptime'] = floor(explode(' ', $this->data['uptime'])[0]);
+		if(version_compare(PHP_VERSION, '5.4.0dev'))
+			$this->data['uptime'] = floor(explode(' ', $this->data['uptime'])[0]);
+		else {
+			$this->data['uptime'] = explode(' ', $this->data['uptime']);
+			$this->data['uptime'] = floor($this->data['uptime'][0]);
+		}
 		$this->data['uptime'] = parent::uptime_string($this->data['uptime']);
 	}
 
@@ -289,7 +294,12 @@ class widget_Linux_data extends widget_data {
 	protected function loadavg() {
 		// Load Average Data
 		$this->data['loadavg'] = @exec('cat /proc/loadavg');
-		$this->data['loadavg'] = array_chunk(explode(' ', $this->data['loadavg']), 3, true)[0];
+		if(version_compare(PHP_VERSION, '5.4.0dev'))
+			$this->data['loadavg'] = array_chunk(explode(' ', $this->data['loadavg']), 3, true)[0];
+		else {
+			$this->data['loadavg'] = array_chunk(explode(' ', $this->data['loadavg']), 3, true);
+			$this->data['loadavg'] = $this->data['loadavg'][0];
+		}
 		if($this->opt['colorize']) {
 			foreach($this->data['loadavg'] as &$loadavg) {
 				if($loadavg >= 1.0)
@@ -308,7 +318,12 @@ class widget_Darwin_data extends widget_data {
 		$this->data['boottime'] = @exec('sysctl kern.boottime');
 		//$this->data['uptime_sec'] = 'kern.boottime: { sec = 1271934886, usec = 667779 } Thu Apr 22 12:14:46 2010';
 		$this->data['boottime'] = str_replace('kern.boottime: { sec = ', '', $this->data['boottime']);
-		$this->data['uptime'] = microtime(true) - explode(', ', $this->data['boottime'])[0];
+		if(version_compare(PHP_VERSION, '5.4.0dev'))
+			$this->data['uptime'] = microtime(true) - explode(', ', $this->data['boottime'])[0];
+		else {
+			$this->data['boottime'] = explode(', ', $this->data['boottime']);
+			$this->data['uptime'] = microtime(true) - $this->data['boottime'][0];
+		}
 		$this->data['uptime'] = parent::uptime_string($this->data['uptime']);
 		unset($this->data['boottime']);
 	}

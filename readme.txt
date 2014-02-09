@@ -4,7 +4,7 @@ Donate link: http://www.extendwings.com/donate/
 Tags: uptime, load average, server, linux, status, dashboard, multisite, network
 Requires at least: 3.8
 Tested up to: 3.9-alpha-27111
-Stable tag: 0.1
+Stable tag: 0.1.1
 License: AGPLv3 or later
 License URI: http://www.gnu.org/licenses/agpl.txt
 
@@ -21,7 +21,8 @@ Show server information widget in Dashboard and Network Admin Dashboard.(Current
 "Server Status" adds widget like 'uptime' command in Dashboard and Network Admin Dashboard.
 
 = Notice =
-**Currently, only RHEL/CentOS is tested.** And OS X is tesing now! (The number of tested OS will increase shortly.)
+* **Currently, only RHEL/CentOS is tested.** And OS X is tesing now! (The number of tested OS will increase shortly.)
+* **Zend OPcache users**, *please add server-status.php* to black list! Otherwise, there must be segmentation fault. This is OPcache bug.
 
 == Installation ==
 
