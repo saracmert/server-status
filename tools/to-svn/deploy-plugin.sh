@@ -104,7 +104,13 @@ echo "[Info] readme.txt/md version: $NEWVERSION1"
 NEWVERSION2=`awk -F': ' '/^.*\*.*Version.*/{print $2}' $GITPATH/$MAINFILE | tr -d '\r'`
 echo "[Info] $MAINFILE version: $NEWVERSION2"
 
-#if [ "$NEWVERSION1" > "$NEWVERSION2" ]; then echo "Version in readme.txt/md($NEWVERSION1) & $MAINFILE($NEWVERSION2) don't match. Exiting...."; exit 1; fi
+if [ "$NEWVERSION1" > "$NEWVERSION2" ]; then
+	echo -n  "Version in readme.txt/md($NEWVERSION1) & $MAINFILE($NEWVERSION2) don't match. Is this ok? [y/N]: ";
+	read VERSIONCHECK
+	case `echo $VERSIONCHECK | tr n N` in
+		"" | N*       ) exit 1;;
+	esac
+fi
 
 NEWVERSION1=$NEWVERSION2
 
