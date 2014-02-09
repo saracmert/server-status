@@ -61,13 +61,9 @@ class dashboard_widget {
 PHP_VERSION: <?php echo PHP_VERSION; ?> 
 WORDPRESS_VERSION: <?php echo get_bloginfo('version'); ?> 
 PLUGIN_VERSION: <?php
-if(version_compare(PHP_VERSION, '5.4.0dev'))
-	echo get_plugin_data(__FILE__)['Version'];
-else {
 	$plugin_data = get_plugin_data(__FILE__);
 	echo $plugin_data['Version'];
 	unset($plugin_data);
-}
 ?> 
 SITE_URL: <?php echo site_url(); ?> 
 HOME_URL: <?php echo home_url(); ?> 
@@ -283,12 +279,7 @@ class widget_Linux_data extends widget_data {
 	protected function uptime() {
 		// Uptime Data
 		$this->data['uptime'] = @exec('cat /proc/uptime');
-		if(version_compare(PHP_VERSION, '5.4.0dev'))
-			$this->data['uptime'] = floor(explode(' ', $this->data['uptime'])[0]);
-		else {
-			$this->data['uptime'] = explode(' ', $this->data['uptime']);
-			$this->data['uptime'] = floor($this->data['uptime'][0]);
-		}
+		$this->data['uptime'] = floor(explode(' ', $this->data['uptime'])[0]);
 		$this->data['uptime'] = parent::uptime_string($this->data['uptime']);
 	}
 
@@ -302,12 +293,7 @@ class widget_Linux_data extends widget_data {
 	protected function loadavg() {
 		// Load Average Data
 		$this->data['loadavg'] = @exec('cat /proc/loadavg');
-		if(version_compare(PHP_VERSION, '5.4.0dev'))
-			$this->data['loadavg'] = array_chunk(explode(' ', $this->data['loadavg']), 3, true)[0];
-		else {
-			$this->data['loadavg'] = array_chunk(explode(' ', $this->data['loadavg']), 3, true);
-			$this->data['loadavg'] = $this->data['loadavg'][0];
-		}
+		$this->data['loadavg'] = array_chunk(explode(' ', $this->data['loadavg']), 3, true)[0];
 		if($this->opt['colorize']) {
 			foreach($this->data['loadavg'] as &$loadavg) {
 				if($loadavg >= 1.0)
@@ -326,12 +312,7 @@ class widget_Darwin_data extends widget_data {
 		$this->data['boottime'] = @exec('sysctl kern.boottime');
 		//$this->data['uptime_sec'] = 'kern.boottime: { sec = 1271934886, usec = 667779 } Thu Apr 22 12:14:46 2010';
 		$this->data['boottime'] = str_replace('kern.boottime: { sec = ', '', $this->data['boottime']);
-		if(version_compare(PHP_VERSION, '5.4.0dev'))
-			$this->data['uptime'] = microtime(true) - explode(', ', $this->data['boottime'])[0];
-		else {
-			$this->data['boottime'] = explode(', ', $this->data['boottime']);
-			$this->data['uptime'] = microtime(true) - $this->data['boottime'][0];
-		}
+		$this->data['uptime'] = microtime(true) - explode(', ', $this->data['boottime'])[0];
 		$this->data['uptime'] = parent::uptime_string($this->data['uptime']);
 		unset($this->data['boottime']);
 	}
