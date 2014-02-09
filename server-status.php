@@ -3,7 +3,7 @@
  * Plugin Name: Server Status
  * Plugin URI: http://www.extendwings.com/
  * Description: Show server information widget in Dashboard and Network Admin Dashboard.(Currently, only RHEL is tested)
- * Version: 0.1.2
+ * Version: 0.1.3-dev
  * Author: Daisuke Takahashi(Extend Wings)
  * Author URI: http://www.extendwings.com
  * License: AGPLv3 or later
