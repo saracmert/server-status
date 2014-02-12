@@ -20,7 +20,7 @@ Show server information widget in Dashboard and Network Admin Dashboard.(Current
 
 "Server Status" adds widget like 'uptime' command in Dashboard and Network Admin Dashboard.
 
-= Notice =
+## Notice
 * **Currently, only RHEL/CentOS is tested.** And OS X is tesing now! (The number of tested OS will increase shortly.)
 * **PECL Zend OPcache users**, *please add server-status.php* to black list! Otherwise, there must be segmentation fault.
 	This troublesome process isn't required on PHP5.5!
@@ -61,7 +61,3 @@ Any `worked` report and bug report is welcome! Please send me detailed informati
 
 = 0.1 =
 * None
-
-== Arbitrary section ==
-
-No content.
