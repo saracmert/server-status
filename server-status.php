@@ -34,6 +34,7 @@ class dashboard_widget {
 	const slug = 'server_status';
 
 	function init() {
+		load_plugin_textdomain('server-status', false, basename(dirname(__FILE__)). '/languages/');
 		wp_add_dashboard_widget(
 			self::slug, // slug
 			__('Server Status', 'server-status'), // title
