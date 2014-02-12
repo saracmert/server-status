@@ -61,7 +61,3 @@ Any `worked` report and bug report is welcome! Please send me detailed informati
 
 = 0.1 =
 * None
-
-== Arbitrary section ==
-
-No content.
