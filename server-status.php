@@ -11,6 +11,12 @@
  * Domain Path: /languages/
 */
 
+if(!function_exists('add_action')) {
+	echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
+	exit;
+}
+
+// Setup
 add_action('wp_dashboard_setup', array('dashboard_widget', 'init'));
 if(is_multisite())
 	add_action('wp_network_dashboard_setup', array('dashboard_widget', 'init'));
