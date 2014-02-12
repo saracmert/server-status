@@ -1,8 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Server Status\n"
-"POT-Creation-Date: 2014-02-12 23:50+0900\n"
-"PO-Revision-Date: 2014-02-12 23:52+0900\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/server-status\n"
+"POT-Creation-Date: 2014-02-12 15:47:10+00:00\n"
+"PO-Revision-Date: 2014-02-13 00:51+0900\n"
 "Last-Translator: Daisuke Takahashi(Extend Wings) <daisuke@extenwings.com>\n"
 "Language-Team: Daisuke Takahashi(Extend Wings) <daisuke@extendwings.com>\n"
 "Language: ja\n"
@@ -16,66 +17,80 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_n_noop:1,2;_nx:1,2;_nx_noop:1,2\n"
 "X-Poedit-SearchPath-0: server-status\n"
 
-#: server-status/server-status.php:39
+#. Plugin Name of the plugin/theme
+#: server-status.php:44
 msgid "Server Status"
 msgstr "Server Status"
 
-#: server-status/server-status.php:49
-#, php-format
+#: server-status.php:54
 msgid "This plugin is not compatible with this OS!!(ID: %s)"
 msgstr "このプラグインと互換性のないOSを使用しています!!(識別子: %s)"
 
-#: server-status/server-status.php:50
-#, php-format
-msgid ""
-"To make this plugin compatible, please send me this server info via <a href="
-"\"%s\" onclick=\"window.open('%s', '_blank', '%s'); return false;\">Email</"
-"a> or <a href=\"%s\">Plugin Support</a>."
-msgstr ""
-"互換性を向上のために、<a href=\"%s\" onclick=\"window.open('%s', '_blank', "
-"'%s'); return false;\">メール</a>か<a href=\"%s\">プラグインサポート</a>経由"
-"で以下の情報を送信ください。"
-
-#: server-status/server-status.php:76
+#: server-status.php:81
 msgid "If you have any comment, add it above this line"
 msgstr "コメントがあればこの線より上に追加してください。"
 
-#: server-status/server-status.php:114
-#, php-format
+#: server-status.php:120
 msgid "Cache Expiration was set for %s sec."
 msgstr "キャッシュの有効期限が %s 秒に設定されました。"
 
-#: server-status/server-status.php:116
+#: server-status.php:122
 msgid "Using Cached Data"
 msgstr "キャッシュデータを使用中です。"
 
-#: server-status/server-status.php:143
+#: server-status.php:149
 msgid "Enable Colorize"
 msgstr "色付けを有効化"
 
-#: server-status/server-status.php:147
-#, php-format
+#: server-status.php:153
 msgid "Cached Data Expiration: %s sec."
 msgstr "キャッシュデータの有効期限: %s 秒"
 
-#: server-status/server-status.php:149
+#: server-status.php:155
 msgid "Min: 2 sec, Step: 1 sec"
 msgstr "最小: 2秒・単位: 1秒"
 
-#: server-status/server-status.php:191
-#, php-format
+#: server-status.php:197
 msgid ""
 "You are using unsupported PHP branch(%s). We recommend upgrading immediately."
 msgstr ""
 "サポートされていないPHPのブランチ(%s)を使用しています。ただちにアップグレード"
 "されることをお勧めします。"
 
-#: server-status/server-status.php:300
+#: server-status.php:306
 msgid "Uptime data is unavailable!"
 msgstr "稼働時間情報は利用できません"
 
-#: server-status/server-status.php:320 server-status/server-status.php:356
-#, php-format
+#: server-status.php:326 server-status.php:362
 msgid "%d user"
 msgid_plural "%d users"
 msgstr[0] "%d ユーザ"
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.extendwings.com/"
+msgstr "http://www.extendwings.com/"
+
+#. Description of the plugin/theme
+msgid ""
+"Show server information widget in Dashboard and Network Admin Dashboard."
+"(Currently, only RHEL is tested)"
+msgstr ""
+"ダッシュボードとネットワーク管理ダッシュボードにサーバ情報を表示します。(今の"
+"ところ、RHELのみテストされています。)"
+
+#. Author of the plugin/theme
+msgid "Daisuke Takahashi(Extend Wings)"
+msgstr "Daisuke Takahashi(Extend Wings)"
+
+#. Author URI of the plugin/theme
+msgid "http://www.extendwings.com"
+msgstr "http://www.extendwings.com"
+
+#~ msgid ""
+#~ "To make this plugin compatible, please send me this server info via <a "
+#~ "href=\"%s\" onclick=\"window.open('%s', '_blank', '%s'); return false;"
+#~ "\">Email</a> or <a href=\"%s\">Plugin Support</a>."
+#~ msgstr ""
+#~ "互換性を向上のために、<a href=\"%s\" onclick=\"window.open('%s', "
+#~ "'_blank', '%s'); return false;\">メール</a>か<a href=\"%s\">プラグインサ"
+#~ "ポート</a>経由で以下の情報を送信ください。"
