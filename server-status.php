@@ -3,7 +3,7 @@
  * Plugin Name: Server Status
  * Plugin URI: http://www.extendwings.com/
  * Description: Show server information widget in Dashboard and Network Admin Dashboard.(Currently, only RHEL is tested)
- * Version: 0.1.3-dev
+ * Version: 0.1.3b1
  * Author: Daisuke Takahashi(Extend Wings)
  * Author URI: http://www.extendwings.com
  * License: AGPLv3 or later
@@ -30,8 +30,9 @@ if(version_compare(PHP_VERSION, '5.2.17', '<=')) {
 	if(is_multisite())
 		remove_action('wp_network_dashboard_setup', array('dashboard_widget', 'init'));
 }
+
 function server_status_load_text_domain() {
-		load_plugin_textdomain('server-status', false, basename(dirname(__FILE__)). '/languages/');
+	load_plugin_textdomain('server-status', false, dirname(plugin_basename(__FILE__)). '/languages/');
 }
 
 class dashboard_widget {
@@ -48,7 +49,7 @@ class dashboard_widget {
 
 	function display() {
 		if(false === ($data = get_site_transient('server_status_cache'))) {
-			if(!in_array(PHP_OS, array('Linux', 'Darwin'))) {
+			if(in_array(PHP_OS, array('Linux', 'Darwin'))) {
 				?>
 				<p><strong><?php printf(__('This plugin is not compatible with this OS!!(ID: %s)', 'server-status'), PHP_OS); ?></strong></p>
 				<p><?php printf(__('To make this plugin compatible, please send me this server info via'
@@ -80,6 +81,7 @@ class dashboard_widget {
 ----<?php _e('If you have any comment, add it above this line', 'server-status'); ?>----
 <?php var_export($data, true); ?>
 ====
+LOCALE: <?php echo get_locale(); ?> 
 PHP_VERSION: <?php echo PHP_VERSION; ?> 
 WORDPRESS_VERSION: <?php echo get_bloginfo('version'); ?> 
 PLUGIN_VERSION: <?php
