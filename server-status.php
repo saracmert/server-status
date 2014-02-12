@@ -18,6 +18,7 @@ if(!function_exists('add_action')) {
 
 // Setup
 add_action('wp_dashboard_setup', array('dashboard_widget', 'init'));
+add_action('plugins_loaded', 'server_status_load_text_domain');
 if(is_multisite())
 	add_action('wp_network_dashboard_setup', array('dashboard_widget', 'init'));
 
@@ -29,12 +30,14 @@ if(version_compare(PHP_VERSION, '5.2.17', '<=')) {
 	if(is_multisite())
 		remove_action('wp_network_dashboard_setup', array('dashboard_widget', 'init'));
 }
+function server_status_load_text_domain() {
+		load_plugin_textdomain('server-status', false, basename(dirname(__FILE__)). '/languages/');
+}
 
 class dashboard_widget {
 	const slug = 'server_status';
 
 	function init() {
-		load_plugin_textdomain('server-status', false, basename(dirname(__FILE__)). '/languages/');
 		wp_add_dashboard_widget(
 			self::slug, // slug
 			__('Server Status', 'server-status'), // title
