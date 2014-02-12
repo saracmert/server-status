@@ -36,7 +36,7 @@ class dashboard_widget {
 	function init() {
 		wp_add_dashboard_widget(
 			self::slug, // slug
-			'Server Status', // title
+			__('Server Status', 'server-status'), // title
 			array(__CLASS__, 'display'), // display function
 			array(__CLASS__, 'control') // control function
 		);
@@ -46,10 +46,13 @@ class dashboard_widget {
 		if(false === ($data = get_site_transient('server_status_cache'))) {
 			if(!in_array(PHP_OS, array('Linux', 'Darwin'))) {
 				?>
-				<p><strong>This widget is not compatible with this OS!!(ID: <?php echo PHP_OS; ?>)</strong></p>
-				<p>To make this plugin compatible, please send me this server info via
-					<a href="http://goo.gl/jb5cqO" onclick="window.open('http://goo.gl/bqItKA', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;" title="Reveal this e-mail address">Email</a>
-					<a href="http://wordpress.org/support/plugin/server-status">Plugin Support</a>.
+				<p><strong><?php printf(__('This plugin is not compatible with this OS!!(ID: %s)', 'server-status'), PHP_OS); ?></strong></p>
+				<p><?php printf(__('To make this plugin compatible, please send me this server info via'
+						.' <a href="%s" onclick="window.open(\'%s\', \'_blank\', \'%s\'); return false;">Email</a>'
+						.' or <a href="%s">Plugin Support</a>.', 'server-status'),
+					'http://goo.gl/jb5cqO', 'http://goo.gl/bqItKA',
+					'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300',
+					'http://wordpress.org/support/plugin/server-status'); ?>
 				</p>
 				<?php
 				$data['uptime'] = @shell_exec('uptime 2>&1');
@@ -70,7 +73,7 @@ class dashboard_widget {
 				<form><div class="textarea-wrap" id="description-wrap">
 <textarea rows="12">
 
-----If you have any comment, add it above this line----
+----<?php _e('If you have any comment, add it above this line', 'server-status'); ?>----
 <?php var_export($data, true); ?>
 ====
 PHP_VERSION: <?php echo PHP_VERSION; ?> 
@@ -108,12 +111,12 @@ SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
 			$data = $instance->fetch($opt);
 
 			set_site_transient('server_status_cache', $data, $opt['expiration']);
-			echo "<p>Cache Expiration was set for {$opt['expiration']} sec.</p>";
+			echo '<p>'. sprintf(__('Cache Expiration was set for %s sec.', 'server-status'), $opt['expiration']) .'</p>';
 		} else {
-			echo "<p><strong>Using Cached Data</strong></p>";
+			echo '<p><strong>'. __('Using Cached Data', 'server-status') .'</strong></p>';
 		//	delete_site_transient('server_status_cache');
 		}
-		echo "<p>".date('H:i:s')." up&nbsp;{$data['uptime']}, &nbsp;{$data['users']}, &nbsp;load&nbsp;average:&nbsp;{$data['loadavg']}</p>";
+		echo '<p>'.date('H:i:s').' up&nbsp;' .$data['uptime']. ', &nbsp;' .$data['users']. ', &nbsp;load&nbsp;average:&nbsp;' .$data['loadavg']. '</p>';
 	}
 
 	function control() {
@@ -134,9 +137,17 @@ SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
 		if(empty($opt['expiration']))
 			$opt['expiration'] = 60;
 		?>
-		<p>Thank you for using <span style="font-style:italic !important;">WP Server Status</span> plugin!</p>
-		<p><label><input type="checkbox" name="colorize" value="true" <?php if($opt['colorize']) echo 'checked="checked" '; ?>/> Enable Colorize</label></p>
-		<p><label>Cached Data Expiration: <input type="number" name="expiration" value="<?php echo $opt['expiration']; ?>" /></label> sec. <small>(Min: 1 sec, Step: 1 sec)</small></p>
+		<p>Thank you for using <span style="font-style:italic !important;">Server Status</span> plugin!</p>
+		<p><label>
+				<input type="checkbox" name="colorize" value="true" <?php if($opt['colorize']) echo 'checked="checked" '; ?>/>
+				<?php _e('Enable Colorize', 'server-status'); ?>
+		</label></p>
+		<p>
+			<label>
+				<?php printf(__('Cached Data Expiration: %s sec.', 'server-status'), '<input type="number" name="expiration" value="' .$opt['expiration']. '" />'); ?>
+			</label>
+			<small><?php _e('Min: 2 sec, Step: 1 sec', 'server-status'); ?></small>
+		</p>
 		<?php
 	}
 
@@ -177,7 +188,7 @@ SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
 	}
 
 	function update_nag(){
-		echo '<div class="error"><p>You are using unsupported version of PHP. We recommend upgrade immediately.</p></div>';
+		echo '<div class="error"><p>'. sprintf(__( 'You are using unsupported PHP branch(%s). We recommend upgrading immediately.', 'server-status' ), PHP_VERSION) .'</p></div>';
 	}
 }
 
@@ -286,7 +297,7 @@ abstract class widget_data {
 
 		$data = implode($data);
 		if(empty($data))
-			$data = "<span style=\"color:limegreen;font-weight:bold;\">uptime data is unavailable!</span>";
+			$data = '<span style="color:limegreen;font-weight:bold;">' .__('Uptime data is unavailable!', 'server-status'). '</span>';
 
 		unset($uptime_sec);
 		return $data;
@@ -306,7 +317,7 @@ class widget_Linux_data extends widget_data {
 		// Logged in User Data
 		$this->data['users'] = @exec('users');
 		$this->data['users'] = count(array_filter(explode(' ', $this->data['users'])));
-		$this->data['users'] .= $this->data['users']<=1 ? ' user' : ' users';
+		$this->data['users'] = sprintf(_n('%d user', '%d users', $this->data['users']), $this->data['users']);
 	}
 
 	protected function loadavg() {
@@ -317,7 +328,7 @@ class widget_Linux_data extends widget_data {
 		if($this->opt['colorize']) {
 			foreach($this->data['loadavg'] as &$loadavg) {
 				if($loadavg >= 1.0)
-					$loadavg = "<span style=\"color:red;font-weight:bold;\">{$loadavg}</span>";
+					$loadavg = '<span style="color:red;font-weight:bold;">' .$loadavg. '</span>';
 			}
 			unset($loadavg);
 		}
@@ -342,7 +353,7 @@ class widget_Darwin_data extends widget_data {
 		// Logged in User Data
 		$this->data['users'] = @exec('users');
 		$this->data['users'] = count(array_filter(explode(' ', $this->data['users'])));
-		$this->data['users'] .= $this->data['users']<=1 ? ' user' : ' users';
+		$this->data['users'] .= sprintf(_n('%d user', '%d users', $this->data['users']), $this->data['users']);
 	}
 
 	protected function loadavg() {
@@ -354,7 +365,7 @@ class widget_Darwin_data extends widget_data {
 		if($this->opt['colorize']) {
 			foreach($this->data['loadavg'] as &$loadavg) {
 				if($loadavg >= 1.0)
-					$loadavg = "<span style=\"color:red;font-weight:bold;\">{$loadavg}</span>";
+					$loadavg = '<span style="color:red;font-weight:bold;">' .$loadavg. '</span>';
 			}
 			unset($loadavg);
 		}

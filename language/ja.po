@@ -1,0 +1,81 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Server Status\n"
+"POT-Creation-Date: 2014-02-12 23:50+0900\n"
+"PO-Revision-Date: 2014-02-12 23:52+0900\n"
+"Last-Translator: Daisuke Takahashi(Extend Wings) <daisuke@extenwings.com>\n"
+"Language-Team: Daisuke Takahashi(Extend Wings) <daisuke@extendwings.com>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.3\n"
+"X-Poedit-Basepath: C:\\Documents and Settings\\daisuke\\My Documents\\Dropbox"
+"\\IT&ICT\\Development\\wordpress-plugin\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_n_noop:1,2;_nx:1,2;_nx_noop:1,2\n"
+"X-Poedit-SearchPath-0: server-status\n"
+
+#: server-status/server-status.php:39
+msgid "Server Status"
+msgstr "Server Status"
+
+#: server-status/server-status.php:49
+#, php-format
+msgid "This plugin is not compatible with this OS!!(ID: %s)"
+msgstr "このプラグインと互換性のないOSを使用しています!!(識別子: %s)"
+
+#: server-status/server-status.php:50
+#, php-format
+msgid ""
+"To make this plugin compatible, please send me this server info via <a href="
+"\"%s\" onclick=\"window.open('%s', '_blank', '%s'); return false;\">Email</"
+"a> or <a href=\"%s\">Plugin Support</a>."
+msgstr ""
+"互換性を向上のために、<a href=\"%s\" onclick=\"window.open('%s', '_blank', "
+"'%s'); return false;\">メール</a>か<a href=\"%s\">プラグインサポート</a>経由"
+"で以下の情報を送信ください。"
+
+#: server-status/server-status.php:76
+msgid "If you have any comment, add it above this line"
+msgstr "コメントがあればこの線より上に追加してください。"
+
+#: server-status/server-status.php:114
+#, php-format
+msgid "Cache Expiration was set for %s sec."
+msgstr "キャッシュの有効期限が %s 秒に設定されました。"
+
+#: server-status/server-status.php:116
+msgid "Using Cached Data"
+msgstr "キャッシュデータを使用中です。"
+
+#: server-status/server-status.php:143
+msgid "Enable Colorize"
+msgstr "色付けを有効化"
+
+#: server-status/server-status.php:147
+#, php-format
+msgid "Cached Data Expiration: %s sec."
+msgstr "キャッシュデータの有効期限: %s 秒"
+
+#: server-status/server-status.php:149
+msgid "Min: 2 sec, Step: 1 sec"
+msgstr "最小: 2秒・単位: 1秒"
+
+#: server-status/server-status.php:191
+#, php-format
+msgid ""
+"You are using unsupported PHP branch(%s). We recommend upgrading immediately."
+msgstr ""
+"サポートされていないPHPのブランチ(%s)を使用しています。ただちにアップグレード"
+"されることをお勧めします。"
+
+#: server-status/server-status.php:300
+msgid "Uptime data is unavailable!"
+msgstr "稼働時間情報は利用できません"
+
+#: server-status/server-status.php:320 server-status/server-status.php:356
+#, php-format
+msgid "%d user"
+msgid_plural "%d users"
+msgstr[0] "%d ユーザ"
