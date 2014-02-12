@@ -21,6 +21,15 @@ add_action('wp_dashboard_setup', array('dashboard_widget', 'init'));
 if(is_multisite())
 	add_action('wp_network_dashboard_setup', array('dashboard_widget', 'init'));
 
+// For unsupported version of PHP
+if(version_compare(PHP_VERSION, '5.2.17', '<=')) {
+	add_action('admin_notices', array('dashboard_widget', 'update_nag'), 3);
+	add_action('network_admin_notices', array('dashboard_widget', 'update_nag'), 3);
+	remove_action('wp_dashboard_setup', array('dashboard_widget', 'init'));
+	if(is_multisite())
+		remove_action('wp_network_dashboard_setup', array('dashboard_widget', 'init'));
+}
+
 class dashboard_widget {
 	const slug = 'server_status';
 
@@ -167,6 +176,9 @@ SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
 		return update_site_option('dashboard_widget_options', $data);
 	}
 
+	function update_nag(){
+		echo '<div class="error"><p>You are using unsupported version of PHP. We recommend upgrade immediately.</p></div>';
+	}
 }
 
 abstract class widget_data {
@@ -187,26 +199,20 @@ abstract class widget_data {
 	}
 
 	protected function add_action($name, $function_to_add, $priority = 10, $accepted_args = 0) {
-		if(version_compare(PHP_VERSION, '5.3.0dev') >= 0) {
-			if(is_callable($function_to_add, true, $function_to_add) && is_int($priority) && is_int($accepted_args)) {
-				$function_name = $function_to_add;
-				if(!isset($this->src[$name][$priority]))
-					$this->src[$name][$priority] = array();
-			}
-		} elseif(is_callable($function_to_add, true, $function_name) && is_int($priority) && is_int($accepted_args)) {
+		if(is_callable($function_to_add, true, $function_name) && is_int($priority) && is_int($accepted_args)) {
 			if(!isset($this->src[$name][$priority]))
 				$this->src[$name][$priority] = array();
-		}
 
-		$this->src[$name][$priority] = array_merge(
-			$this->src[$name][$priority],
-			array(
-				$function_name => array(
-						'function' => $function_to_add,
-						'accepted_args' => $accepted_args
+			$this->src[$name][$priority] = array_merge(
+				$this->src[$name][$priority],
+				array(
+					$function_name => array(
+							'function' => $function_to_add,
+							'accepted_args' => $accepted_args
+					)
 				)
-			)
-		);
+			);
+		}
 	}
 
 	protected function remove_action($name, $function_to_remove, $priority = 10) {
