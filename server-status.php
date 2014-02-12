@@ -32,7 +32,7 @@ if(version_compare(PHP_VERSION, '5.2.17', '<=')) {
 }
 
 function server_status_load_text_domain() {
-	load_plugin_textdomain('server-status', false, dirname(plugin_basename(__FILE__)). '/languages/');
+	load_plugin_textdomain('server-status', false, basename(dirname(__FILE__)). '/languages/');
 }
 
 class dashboard_widget {
