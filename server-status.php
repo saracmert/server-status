@@ -18,7 +18,11 @@ if(!function_exists('add_action')) {
 
 // Setup
 add_action('wp_dashboard_setup', array('dashboard_widget', 'init'));
-add_action('plugins_loaded', 'server_status_load_text_domain');
+if(did_action('plugins_loaded'))
+	server_status_load_text_domain();
+else
+	add_action('plugins_loaded', 'server_status_load_text_domain');
+
 if(is_multisite())
 	add_action('wp_network_dashboard_setup', array('dashboard_widget', 'init'));
 
@@ -49,7 +53,7 @@ class dashboard_widget {
 
 	function display() {
 		if(false === ($data = get_site_transient('server_status_cache'))) {
-			if(in_array(PHP_OS, array('Linux', 'Darwin'))) {
+			if(!in_array(PHP_OS, array('Linux', 'Darwin'))) {
 				?>
 				<p><strong><?php printf(__('This plugin is not compatible with this OS!!(ID: %s)', 'server-status'), PHP_OS); ?></strong></p>
 				<p><?php printf(__('To make this plugin compatible, please send me this server info via'
@@ -152,7 +156,7 @@ SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
 			<label>
 				<?php printf(__('Cached Data Expiration: %s sec.', 'server-status'), '<input type="number" name="expiration" value="' .$opt['expiration']. '" />'); ?>
 			</label>
-			<small><?php _e('Min: 2 sec, Step: 1 sec', 'server-status'); ?></small>
+			<small>(<?php _e('Min: 2 sec, Step: 1 sec', 'server-status'); ?>)</small>
 		</p>
 		<?php
 	}
@@ -323,7 +327,7 @@ class widget_Linux_data extends widget_data {
 		// Logged in User Data
 		$this->data['users'] = @exec('users');
 		$this->data['users'] = count(array_filter(explode(' ', $this->data['users'])));
-		$this->data['users'] = sprintf(_n('%d user', '%d users', $this->data['users']), $this->data['users']);
+		$this->data['users'] = sprintf(_n('%d user', '%d users', $this->data['users'], 'server-status'), $this->data['users']);
 	}
 
 	protected function loadavg() {
@@ -359,7 +363,7 @@ class widget_Darwin_data extends widget_data {
 		// Logged in User Data
 		$this->data['users'] = @exec('users');
 		$this->data['users'] = count(array_filter(explode(' ', $this->data['users'])));
-		$this->data['users'] .= sprintf(_n('%d user', '%d users', $this->data['users']), $this->data['users']);
+		$this->data['users'] .= sprintf(_n('%d user', '%d users', $this->data['users'], 'server-status'), $this->data['users']);
 	}
 
 	protected function loadavg() {
