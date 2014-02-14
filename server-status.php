@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: Server Status
- * Plugin URI: http://www.extendwings.com/
+ * Plugin URI: http://wordpress.org/plugins/server-status/
  * Description: Show server information widget in Dashboard and Network Admin Dashboard.(Currently, only RHEL is tested)
  * Version: 0.1.3b1
  * Author: Daisuke Takahashi(Extend Wings)
@@ -56,13 +56,11 @@ class dashboard_widget {
 			if(!in_array(PHP_OS, array('Linux', 'Darwin'))) {
 				?>
 				<p><strong><?php printf(__('This plugin is not compatible with this OS!!(ID: %s)', 'server-status'), PHP_OS); ?></strong></p>
-				<p><?php printf(__('To make this plugin compatible, please send me this server info via'
-						.' <a href="%s" onclick="window.open(\'%s\', \'_blank\', \'%s\'); return false;">Email</a>'
-						.' or <a href="%s">Plugin Support</a>.', 'server-status'),
-					'http://goo.gl/jb5cqO', 'http://goo.gl/bqItKA',
-					'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300',
-					'http://wordpress.org/support/plugin/server-status'); ?>
-				</p>
+				<p><?php
+					printf(__('To make this plugin compatible, please send me this server info via <a href="%s">Email</a> or <a href="%s">Plugin Support</a>.', 'server-status'),
+					'http://www.google.com/recaptcha/mailhide/d?k=01hpI-Mg5ShFZmnWyVfzZDAA==&amp;c=GYA1ly6aBnLX1cyfYhgoR2-XHltkN1-VNtp5WY_an6k=" onclick="window.open(\'http://www.google.com/recaptcha/mailhide/d?k\07501hpI-Mg5ShFZmnWyVfzZDAA\75\75\46c\75GYA1ly6aBnLX1cyfYhgoR2-XHltkN1-VNtp5WY_an6k\075\', \'\', \'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300\'); return false;',
+					'http://wordpress.org/support/plugin/server-status');
+				?></p>
 				<?php
 				$data['uptime'] = @shell_exec('uptime 2>&1');
 				$data['proc']['uptime'] = @shell_exec('cat /proc/uptime 2>&1');
@@ -126,7 +124,7 @@ SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
 			echo '<p><strong>'. __('Using Cached Data', 'server-status') .'</strong></p>';
 		//	delete_site_transient('server_status_cache');
 		}
-		echo '<p>'.date('H:i:s').' up&nbsp;' .$data['uptime']. ', &nbsp;' .$data['users']. ', &nbsp;load&nbsp;average:&nbsp;' .$data['loadavg']. '</p>';
+		echo '<p>'.date('H:i:s').' up&nbsp;' .$data['uptime']. ', &nbsp;' .$data['users']. ', &nbsp;'. sprintf(__('load average: %s', 'server-status'), $data['loadavg']). '</p>';
 	}
 
 	function control() {
@@ -268,29 +266,22 @@ abstract class widget_data {
 		$uptime_sec %= 31536000;
 
  		$data['week'] = floor($uptime_sec / 604800);
-		if($data['week'] == 0) {
+		if($data['week'] == 0)
 			$data['week'] = NULL;
-			if(!$data['year'])
-				$data['year'] = substr($data['year'], 0, -2);
-		} else
+		else
 			$data['week'] .= $data['week']<=1 ? ' week, ' : ' weeks, ';
 		$uptime_sec %= 604800;
 
 		$data['day'] = floor($uptime_sec / 86400);
-		if($data['day'] == 0) {
+		if($data['day'] == 0)
 			$data['day'] = NULL;
-			if(!$data['week'])
-				$data['week'] = substr($data['week'], 0, -2);
-		} else
+		else
 			$data['day'] .= $data['day']<=1 ? ' day, ' : ' days, ';
 		$uptime_sec %= 86400;
 
 		$data['hour'] = str_pad(floor($uptime_sec / 3600), 2, '0', STR_PAD_LEFT) .':';
-		if($data['hour'] == '00:') {
+		if($data['hour'] == '00:')
 			$data['hour'] = NULL;
-			if(!$data['day'])
-				$data['day'] = substr($data['day'], 0, -2);
-		}
 		$uptime_sec %= 3600;
 
 		$data['min'] = floor($uptime_sec / 60);
@@ -342,7 +333,7 @@ class widget_Linux_data extends widget_data {
 			}
 			unset($loadavg);
 		}
-		$this->data['loadavg'] = implode(',&nbsp;', $this->data['loadavg']);
+		$this->data['loadavg'] = implode(', ', $this->data['loadavg']);
 	}
 
 }
@@ -379,7 +370,7 @@ class widget_Darwin_data extends widget_data {
 			}
 			unset($loadavg);
 		}
-		$this->data['loadavg'] = implode(',&nbsp;', $this->data['loadavg']);
+		$this->data['loadavg'] = implode(', ', $this->data['loadavg']);
 	}
 }
 
