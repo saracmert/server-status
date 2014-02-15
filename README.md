@@ -1,4 +1,4 @@
-#[Server Status](http://www.extendwings.com)
+#[Server Status](http://wordpress.org/plugins/server-status/)
 
 ***WARNING***:This is experimental and in development. All files in this repo is licensed under GNU AGPLv3.
 
@@ -15,3 +15,7 @@
 * **PECL Zend OPcache users**, *please add server-status.php* to black list! Otherwise, there must be segmentation fault.
 	This troublesome process isn't required on PHP5.5!
 * **PHP 5.2 users**, your version of PHP is no longer supported.([Detail](http://www.php.net/eol.php)) If you're using such older version, this plugin nags at it!
+
+## License
+
+All files in this repo is licensed under GNU AGPLv3. See "LICENSE" file.
