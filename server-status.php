@@ -53,7 +53,7 @@ class dashboard_widget {
 
 	function display() {
 		if(false === ($data = get_site_transient('server_status_cache'))) {
-			if(!in_array(PHP_OS, array('Linux', 'Darwin'))) {
+			if(!in_array(PHP_OS, array('Linux', 'Darwin', 'WINNT'))) {
 				?>
 				<p><strong><?php printf(__('This plugin is not compatible with this OS!!(ID: %s)', 'server-status'), PHP_OS); ?></strong></p>
 				<p><?php
@@ -109,6 +109,7 @@ SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
 			switch(PHP_OS) {
 				case 'Linux':
 				case 'Darwin':
+				case 'WINNT':
 					$os = PHP_OS;
 					break;
 				default:
@@ -372,6 +373,9 @@ class widget_Darwin_data extends widget_data {
 		}
 		$this->data['loadavg'] = implode(', ', $this->data['loadavg']);
 	}
+}
+
+class widget_WINNT_data extends widget_data {
 }
 
 ?>
