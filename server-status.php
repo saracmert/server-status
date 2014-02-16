@@ -16,27 +16,28 @@ if(!function_exists('add_action')) {
 	exit;
 }
 
-// Setup
-add_action('wp_dashboard_setup', array('dashboard_widget', 'init'));
-if(did_action('plugins_loaded'))
-	server_status_load_text_domain();
-else
-	add_action('plugins_loaded', 'server_status_load_text_domain');
+dashboard_widget_loader();
 
-if(is_multisite())
-	add_action('wp_network_dashboard_setup', array('dashboard_widget', 'init'));
+function dashboard_widget_loader() {
+	$dashboard_widget = new dashboard_widget();
+	if(did_action('plugins_loaded'))
+		server_status_load_text_domain();
+	else
+		add_action('plugins_loaded', array(&$dashboard_widget, 'load_text_domain'));
 
-// For unsupported version of PHP
-if(version_compare(PHP_VERSION, '5.2.17', '<=')) {
-	add_action('admin_notices', array('dashboard_widget', 'update_nag'), 3);
-	add_action('network_admin_notices', array('dashboard_widget', 'update_nag'), 3);
-	remove_action('wp_dashboard_setup', array('dashboard_widget', 'init'));
+	// Setup
+	add_action('wp_dashboard_setup', array(&$dashboard_widget, 'init'));
 	if(is_multisite())
-		remove_action('wp_network_dashboard_setup', array('dashboard_widget', 'init'));
-}
+		add_action('wp_network_dashboard_setup', array(&$dashboard_widget, 'init'));
 
-function server_status_load_text_domain() {
-	load_plugin_textdomain('server-status', false, basename(dirname(__FILE__)). '/languages/');
+	// For unsupported version of PHP
+	if(version_compare(PHP_VERSION, '5.2.17', '<=')) {
+		add_action('admin_notices', array(&$dashboard_widget, 'update_nag'), 3);
+		add_action('network_admin_notices', array(&$dashboard_widget, 'update_nag'), 3);
+		remove_action('wp_dashboard_setup', array(&$dashboard_widget, 'init'));
+		if(is_multisite())
+			remove_action('wp_network_dashboard_setup', array(&$dashboard_widget, 'init'));
+	}
 }
 
 class dashboard_widget {
@@ -46,9 +47,13 @@ class dashboard_widget {
 		wp_add_dashboard_widget(
 			self::slug, // slug
 			__('Server Status', 'server-status'), // title
-			array(__CLASS__, 'display'), // display function
-			array(__CLASS__, 'control') // control function
+			array(&$this, 'display'), // display function
+			array(&$this, 'control') // control function
 		);
+	}
+
+	function load_text_domain() {
+		load_plugin_textdomain('server-status', false, basename(dirname(__FILE__)). '/languages/');
 	}
 
 	function display() {
@@ -101,8 +106,8 @@ SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
 				return false;
 			}
 
-			$opt['colorize'] = self::get_dashboard_widget_option(self::slug, 'colorize');
-			$opt['expiration'] = self::get_dashboard_widget_option(self::slug, 'expiration');
+			$opt['colorize'] = $this->get_dashboard_widget_option(self::slug, 'colorize');
+			$opt['expiration'] = $this->get_dashboard_widget_option(self::slug, 'expiration');
 			if(empty($opt['expiration']))
 				$opt['expiration'] = 60;
 
@@ -125,7 +130,7 @@ SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
 			echo '<p><strong>'. __('Using Cached Data', 'server-status') .'</strong></p>';
 		//	delete_site_transient('server_status_cache');
 		}
-		echo '<p>'.date('H:i:s').' up&nbsp;' .$data['uptime']. ', &nbsp;' .$data['users']. ', &nbsp;'. sprintf(__('load average: %s', 'server-status'), $data['loadavg']). '</p>';
+		echo '<p>' .$data['msg']. '</p>';
 	}
 
 	function control() {
@@ -135,14 +140,14 @@ SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
 			if(!is_numeric($opt['expiration']) || 1>=($opt['expiration'] = intval($opt['expiration'])))
 					$opt['expiration'] = 60;
 
-			self::update_dashboard_widget_options(
+			$this->update_dashboard_widget_options(
 				self::slug, // slug
 				$opt
 			);
 			delete_site_transient('server_status_cache');
 		}
-		$opt['colorize'] = self::get_dashboard_widget_option(self::slug, 'colorize');
-		$opt['expiration'] = self::get_dashboard_widget_option(self::slug, 'expiration');
+		$opt['colorize'] = $this->get_dashboard_widget_option(self::slug, 'colorize');
+		$opt['expiration'] = $this->get_dashboard_widget_option(self::slug, 'expiration');
 		if(empty($opt['expiration']))
 			$opt['expiration'] = 60;
 		?>
@@ -173,7 +178,7 @@ SERVER_SOFTWARE: <?php echo $_SERVER['SERVER_SOFTWARE']; ?> </textarea>
 	}
 
 	private function get_dashboard_widget_option($widget_id, $option) {
-		$data = self::get_dashboard_widget_options($widget_id);
+		$data = $this->get_dashboard_widget_options($widget_id);
 
 		if(!$data)
 			return false;
@@ -206,17 +211,16 @@ abstract class widget_data {
 	protected $opt = array();
 	private $src = array();
 
-	function __construct() {
-		$this->add_action('fetch', array(&$this,'uptime'));
-		$this->add_action('fetch', array(&$this,'users'));
-		$this->add_action('fetch', array(&$this,'loadavg'));
-	}
+	abstract function __construct();
 
 	function fetch(array $opt) {
 		$this->opt = &$opt;
 		$this->do_action('fetch');
+		$this->formatted_text();
 		return $this->data;
 	}
+
+	abstract protected function formatted_text();
 
 	protected function add_action($name, $function_to_add, $priority = 10, $accepted_args = 0) {
 		if(is_callable($function_to_add, true, $function_name) && is_int($priority) && is_int($accepted_args)) {
@@ -251,12 +255,6 @@ abstract class widget_data {
 			}
 		}
 	}
-
-	abstract protected function uptime();
-
-	abstract protected function users();
-
-	abstract protected function loadavg();
 
 	static function uptime_string($uptime_sec) {
 		$data['year'] = floor($uptime_sec / 31536000);
@@ -307,6 +305,16 @@ abstract class widget_data {
 }
 
 class widget_Linux_data extends widget_data {
+	function __construct() {
+		$this->add_action('fetch', array(&$this,'uptime'));
+		$this->add_action('fetch', array(&$this,'users'));
+		$this->add_action('fetch', array(&$this,'loadavg'));
+	}
+
+	protected function formatted_text() {
+		$this->data['msg'] = date('H:i:s'). ' up&nbsp;' .$this->data['uptime']. ', &nbsp;' .$this->data['users']. ', &nbsp;'. sprintf(__('load average: %s', 'server-status'), $this->data['loadavg']);
+	}
+
 	protected function uptime() {
 		// Uptime Data
 		$this->data['uptime'] = @exec('cat /proc/uptime');
@@ -336,10 +344,19 @@ class widget_Linux_data extends widget_data {
 		}
 		$this->data['loadavg'] = implode(', ', $this->data['loadavg']);
 	}
-
 }
 
 class widget_Darwin_data extends widget_data {
+	function __construct() {
+		$this->add_action('fetch', array(&$this,'uptime'));
+		$this->add_action('fetch', array(&$this,'users'));
+		$this->add_action('fetch', array(&$this,'loadavg'));
+	}
+
+	protected function formatted_text() {
+		$this->data['msg'] = date('H:i:s'). ' up&nbsp;' .$this->data['uptime']. ', &nbsp;' .$this->data['users']. ', &nbsp;'. sprintf(__('load average: %s', 'server-status'), $this->data['loadavg']);
+	}
+
 	protected function uptime() {
 		// Uptime Data
 		$this->data['boottime'] = @exec('sysctl kern.boottime');
@@ -376,6 +393,13 @@ class widget_Darwin_data extends widget_data {
 }
 
 class widget_WINNT_data extends widget_data {
+	function __construct() {
+		return;
+	}
+
+	protected function formatted_text() {
+		$this->data['msg'] = __('Goddamn! Somethig has gone wrong with Windows project. It\'s probably Bill\'s fault. Hopefully this should be fixed, but they are unmotivated...', 'server-status');
+	}
 }
 
 ?>
