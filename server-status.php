@@ -3,7 +3,7 @@
  * Plugin Name: Server Status
  * Plugin URI: http://wordpress.org/plugins/server-status/
  * Description: Show server information widget in Dashboard and Network Admin Dashboard.(Currently, only RHEL is tested)
- * Version: 0.1.3b1
+ * Version: 0.1.3b2
  * Author: Daisuke Takahashi(Extend Wings)
  * Author URI: http://www.extendwings.com
  * License: AGPLv3 or later
