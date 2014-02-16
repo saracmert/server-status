@@ -21,7 +21,7 @@ dashboard_widget_loader();
 function dashboard_widget_loader() {
 	$dashboard_widget = new dashboard_widget();
 	if(did_action('plugins_loaded'))
-		server_status_load_text_domain();
+		$dashboard_widget->load_text_domain();
 	else
 		add_action('plugins_loaded', array(&$dashboard_widget, 'load_text_domain'));
 
