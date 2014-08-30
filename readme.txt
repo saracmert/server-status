@@ -3,7 +3,7 @@ Contributors: extendwings,
 Donate link: http://www.extendwings.com/donate/
 Tags: uptime, load average, server, linux, status, dashboard, multisite, network
 Requires at least: 3.8
-Tested up to: 3.9-alpha-27111
+Tested up to: 4.0
 Stable tag: 0.1.2
 License: AGPLv3 or later
 License URI: http://www.gnu.org/licenses/agpl.txt
